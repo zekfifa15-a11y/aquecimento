@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Aquecimento de chip WhatsApp</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;600;800&display=swap" rel="stylesheet">
+<style>
+/* VOICE everyday work guide: direct, clear, nothing extra
+   IDEA a thermometer heating up: the number warms day by day, from cold chip to running campaign
+   PICTURE a full-width heat track with six day stations, cool green to hot orange, the campaign day marked
+   COLOUR white ground, deep green ink, heat gradient mint to orange to red, orange accent
+   TYPE Schibsted Grotesk 800 for titles and day numerals, Schibsted Grotesk for text
+   LAYOUT title band, heat track full width, then one row per day with the day hanging in a left column; phone stacks, track turns vertical */
+:root{color-scheme:light dark;--bg:light-dark(#ffffff,#07150f);--ink:light-dark(#0c2419,#e6f2ec);--soft:light-dark(#4b6359,#9fb8ad);--line:light-dark(#dbe6e0,#1c3329);--panel:light-dark(#f2f8f4,#0d2119);--green:light-dark(#0b6b44,#3ccf8e);--hot:light-dark(#e2531b,#ff7a3d);--hotbg:light-dark(#fff1e8,#2a160c)}
+:root[data-theme=light]{color-scheme:light}
+:root[data-theme=dark]{color-scheme:dark}
+*{box-sizing:border-box;min-width:0}
+html{scroll-padding-top:72px}
+body{margin:0;background:var(--bg);color:var(--ink);font:16.5px/1.6 "Schibsted Grotesk",system-ui,sans-serif;overflow-x:clip}
+.band{padding:clamp(28px,4vw,56px) max(5vw,16px)}
+.wrap{max-width:1180px;margin:0 auto}
+h1,h2,h3{font-weight:800;letter-spacing:-.02em;line-height:1.05;margin:0}
+h1{font-size:clamp(34px,5vw,52px);text-wrap:balance;max-width:18ch}
+h2{font-size:clamp(26px,3vw,34px)}
+.lead{font-size:18px;color:var(--soft);max-width:62ch;margin:16px 0 0}
+.top{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:32px;align-items:end}
+.rule{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px 20px}
+.rule b{display:block;font-size:15px;margin-bottom:6px}
+.rule p{margin:0;font-size:15px;color:var(--soft)}
+.heat{padding-top:0}
+.thermo{position:relative;display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:12px;padding-top:58px}
+.track{position:absolute;left:0;right:0;top:20px;height:16px;border-radius:99px;background:var(--line);overflow:hidden}
+.fill{position:absolute;inset:0;border-radius:99px;background:linear-gradient(90deg,#8fd3b4 0%,#c9d97a 35%,#f6a53c 62%,#ef5a24 82%,#d42d1a 100%);transform-origin:left;animation:warm 1.6s cubic-bezier(.3,.7,.2,1) both}
+@keyframes warm{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+@media(prefers-reduced-motion:reduce){.fill{animation:none}}
+.st{position:relative;display:block;text-decoration:none;color:inherit;background:var(--bg);border:1px solid var(--line);border-radius:14px;padding:16px 16px 18px;min-height:150px}
+.st::before{content:"";position:absolute;top:-46px;left:18px;width:20px;height:20px;border-radius:50%;background:var(--bg);border:4px solid var(--ink)}
+.st:hover{border-color:var(--ink)}
+.st:focus-visible{outline:3px solid var(--hot);outline-offset:2px}
+.st .d{font-weight:800;font-size:26px;letter-spacing:-.02em;line-height:1}
+.st .n{font-weight:600;margin:8px 0 4px;font-size:15.5px}
+.st .s{font-size:14px;color:var(--soft);line-height:1.45}
+.st.go{background:var(--hotbg);border:2px solid var(--hot)}
+.st.go::before{border-color:var(--hot);background:var(--hot)}
+.tag{display:inline-block;margin-top:10px;font-size:13px;font-weight:600;color:#fff;background:var(--hot);border-radius:99px;padding:2px 10px}
+nav.scroll{display:flex;gap:8px;overflow-x:auto;padding:4px max(5vw,16px) 14px;border-bottom:1px solid var(--line)}
+nav.scroll a{flex:none;color:var(--ink);text-decoration:none;font-size:14.5px;font-weight:500;border:1px solid var(--line);border-radius:99px;padding:8px 14px;min-height:40px;display:inline-flex;align-items:center}
+nav.scroll a:hover{border-color:var(--ink)}
+@media(min-width:900px){nav.scroll{position:sticky;top:0;background:var(--bg);z-index:5}}
+.day{display:grid;grid-template-columns:minmax(150px,220px) minmax(0,1fr);gap:clamp(20px,4vw,56px);padding-block:clamp(26px,3.5vw,44px);border-top:1px solid var(--line)}
+.day:first-child{border-top:0}
+.num{font-weight:800;font-size:clamp(40px,6vw,72px);line-height:.95;letter-spacing:-.03em}
+.num small{display:block;font-size:15px;font-weight:600;letter-spacing:0;color:var(--soft);margin-top:10px}
+.day.go .num{color:var(--hot)}
+.body h3{font-size:24px;margin-bottom:10px}
+.body p{margin:0 0 12px;max-width:68ch}
+.body ol{margin:0;padding-left:1.4em;max-width:68ch}
+.body li{margin:6px 0;padding-left:4px}
+.body li::marker{font-weight:800;color:var(--green)}
+.note{border-left:4px solid var(--green);background:var(--panel);padding:12px 16px;border-radius:0 10px 10px 0;margin:14px 0 0;max-width:68ch}
+.day.go .note{border-color:var(--hot);background:var(--hotbg)}
+table{border-collapse:collapse;width:100%;max-width:720px;margin-top:6px}
+th,td{text-align:left;padding:12px 14px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:14px;color:var(--soft);font-weight:600}
+td:first-child{font-weight:600;white-space:nowrap}
+.big{display:grid;grid-template-columns:repeat(auto-fit,minmax(10em,1fr));gap:12px;margin:4px 0 16px;max-width:720px}
+.big div{background:var(--panel);border-radius:12px;padding:14px 16px}
+.big strong{display:block;font-size:clamp(24px,3vw,30px);font-weight:800;letter-spacing:-.02em;white-space:nowrap}
+.big span{font-size:14px;color:var(--soft)}
+.steps{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:8px}
+.steps span{background:var(--hotbg);color:var(--ink);font-weight:600;border-radius:8px;padding:6px 10px;white-space:nowrap}
+.steps i{font-style:normal;color:var(--soft)}
+.end{background:var(--panel);border-top:1px solid var(--line)}
+.cols{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(24px,4vw,56px)}
+.golden{list-style:none;margin:16px 0 0;padding:0}
+.golden li{padding:14px 0;border-bottom:1px solid var(--line);display:grid;grid-template-columns:32px minmax(0,1fr);gap:10px}
+.golden li::before{content:"";width:14px;height:14px;margin-top:6px;border-radius:50%;background:var(--hot)}
+.check{list-style:none;margin:16px 0 0;padding:0}
+.check label{display:flex;gap:12px;align-items:flex-start;padding:10px 0;border-bottom:1px solid var(--line);cursor:pointer;min-height:44px}
+.check input{appearance:none;flex:none;width:24px;height:24px;margin:1px 0 0;border:2px solid var(--ink);border-radius:6px;display:grid;place-items:center;cursor:pointer;background:var(--bg)}
+.check input:checked{background:var(--green);border-color:var(--green)}
+.check input:checked::after{content:"";width:6px;height:11px;border:solid #fff;border-width:0 3px 3px 0;transform:rotate(45deg) translate(-1px,-1px)}
+.check input:focus-visible{outline:3px solid var(--hot);outline-offset:2px}
+.check input:checked + span{color:var(--soft);text-decoration:line-through}
+.check b{font-weight:600}
+.bar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:16px;flex-wrap:wrap}
+.prog{flex:1;height:10px;border-radius:99px;background:var(--line);overflow:hidden;min-width:140px}
+.prog i{display:block;height:100%;width:0;background:var(--green);transition:width .3s}
+button{font:inherit;font-size:15px;font-weight:600;color:var(--ink);background:var(--bg);border:1.5px solid var(--ink);border-radius:10px;padding:10px 16px;min-height:44px;cursor:pointer}
+button:hover{background:var(--ink);color:var(--bg)}
+button:focus-visible{outline:3px solid var(--hot);outline-offset:2px}
+footer{padding:20px max(5vw,16px) 36px;color:var(--soft);font-size:14px}
+@media(max-width:900px){.thermo{grid-template-columns:repeat(3,minmax(0,1fr));row-gap:16px;padding-top:0}.track,.st::before{display:none}.top{grid-template-columns:minmax(0,1fr)}}
+@media(max-width:600px){
+.thermo{grid-template-columns:minmax(0,1fr);gap:10px;padding-left:30px}
+.thermo::before{content:"";position:absolute;left:6px;top:8px;bottom:8px;width:12px;border-radius:99px;background:linear-gradient(180deg,#8fd3b4 0%,#c9d97a 35%,#f6a53c 62%,#ef5a24 82%,#d42d1a 100%)}
+.st{min-height:0;padding:12px 14px}
+.st::before{display:block;top:16px;left:-30px;width:16px;height:16px;border-width:3px}
+.day{grid-template-columns:minmax(0,1fr);gap:10px}
+.cols{grid-template-columns:minmax(0,1fr)}
+td:first-child{white-space:normal}
+}
+</style>
+</head>
+<body>
+
+<header class="band">
+  <div class="wrap top">
+    <div>
+      <h1>Aquecimento de chip no WhatsApp, dia a dia</h1>
+      <p class="lead">Cinco dias de preparo antes da primeira campanha e, depois, escala bem devagar. É um aquecimento longo, feito para o número aguentar bastante tempo sem bloqueio.</p>
+    </div>
+    <div class="rule">
+      <b>A regra que vale para todo o processo</b>
+      <p>O número novo nunca puxa conversa. São os outros que falam com ele primeiro, e a campanha sempre começa pequena.</p>
+    </div>
+  </div>
+</header>
+
+<section class="band heat" aria-label="Cronograma do aquecimento">
+  <div class="wrap">
+    <div class="thermo">
+      <div class="track" aria-hidden="true"><div class="fill"></div></div>
+      <a class="st" href="#dia-1"><div class="d">Dia 1</div><div class="n">Montar o número</div><div class="s">Perfil, 3 contatos puxam conversa, 3 grupos</div></a>
+      <a class="st" href="#dias-2-3"><div class="d">Dias 2–3</div><div class="n">Descanso</div><div class="s">Número parado, sem nada</div></a>
+      <a class="st" href="#dia-4"><div class="d">Dia 4</div><div class="n">Indiano 24h</div><div class="s">Rodar o indiano o dia inteiro</div></a>
+      <a class="st" href="#dia-5"><div class="d">Dia 5</div><div class="n">Leona + indiano</div><div class="s">Conectar na Leona, sem funil</div></a>
+      <a class="st go" href="#dia-6"><div class="d">Dia 6</div><div class="n">1ª campanha</div><div class="s">R$ 6, pausar em 6–7 leads</div><span class="tag">Campanha começa</span></a>
+      <a class="st" href="#dia-7"><div class="d">Dia 7+</div><div class="n">Escala</div><div class="s">+R$ 3 por dia até ~100 msgs</div></a>
+    </div>
+  </div>
+</section>
+
+<nav class="scroll" aria-label="Seções">
+  <a href="#dia-1">Dia 1</a><a href="#dias-2-3">Dias 2 e 3</a><a href="#dia-4">Dia 4</a><a href="#dia-5">Dia 5</a><a href="#dia-6">Dia 6</a><a href="#dia-7">Dia 7+</a><a href="#regras">Regras de ouro</a><a href="#checklist">Checklist</a>
+</nav>
+
+<main class="band">
+  <div class="wrap">
+
+    <article class="day" id="dia-1">
+      <div class="num">Dia 1<small>Montar o número</small></div>
+      <div class="body">
+        <h3>O número novo só recebe e responde</h3>
+        <ol>
+          <li>Pegue um chip novo e faça o cadastro dele com CPF.</li>
+          <li>Instale o WhatsApp e faça o login com esse número.</li>
+          <li>Configure o perfil logo de cara: foto, nicho <b>Educação</b> e a descrição.</li>
+          <li>Salve tudo. Vai aparecer a tela inicial com a mensagem padrão que o WhatsApp manda.</li>
+          <li>Pegue <b>3 outros números</b> e salve o contato do número novo em cada um deles. Pode salvar antes ou logo depois de mandar a mensagem, tanto faz, mas salve.</li>
+          <li>Dos 3 números, mande uma mensagem para o número novo.</li>
+          <li>No número novo, responda às 3 pessoas e salve o contato delas.</li>
+          <li>Entre em <b>3 grupos</b> diferentes.</li>
+        </ol>
+        <p class="note">Pronto. Não faça mais nada nesse dia.</p>
+      </div>
+    </article>
+
+    <article class="day" id="dias-2-3">
+      <div class="num">Dias 2 e 3<small>Descanso</small></div>
+      <div class="body">
+        <h3>Dois dias com o número parado</h3>
+        <p>Não mande mensagem, não conecte em nada e não rode campanha. Só deixe o número quieto.</p>
+      </div>
+    </article>
+
+    <article class="day" id="dia-4">
+      <div class="num">Dia 4<small>Indiano 24h</small></div>
+      <div class="body">
+        <h3>Rodar o indiano o dia inteiro</h3>
+        <p>Coloque o número para rodar o indiano por <b>24 horas completas</b>. É só isso nesse dia.</p>
+      </div>
+    </article>
+
+    <article class="day" id="dia-5">
+      <div class="num">Dia 5<small>Leona + indiano</small></div>
+      <div class="body">
+        <h3>Conectar na Leona e rodar o indiano de novo</h3>
+        <p>Conecte o número na Leona e rode o indiano mais uma vez, agora com a Leona conectada. O objetivo é só os contatos do indiano passarem a rodar dentro da Leona.</p>
+        <p class="note">Nenhum funil, nenhum fluxo, nada configurado. Só o indiano rodando.</p>
+      </div>
+    </article>
+
+    <article class="day go" id="dia-6">
+      <div class="num">Dia 6<small>Primeira campanha</small></div>
+      <div class="body">
+        <h3>Campanha normal, começando pequena</h3>
+        <div class="big">
+          <div><strong>R$ 6</strong><span>orçamento mínimo</span></div>
+          <div><strong>até 8</strong><span>leads no dia, no máximo</span></div>
+          <div><strong>6–7</strong><span>leads: pause a campanha</span></div>
+        </div>
+        <table class="stack">
+          <thead><tr><th>O quê</th><th>Regra</th></tr></thead>
+          <tbody>
+            <tr><td>Campanha</td><td>Pode rodar a campanha normal de trabalho para esse número.</td></tr>
+            <tr><td>Leads</td><td>Menos de 10 no primeiro dia, com certeza. O ideal é no máximo 8.</td></tr>
+            <tr><td>Quando pausar</td><td>Chegou em 6 ou 7 leads, pause para não correr risco de bloqueio.</td></tr>
+            <tr><td>Indiano</td><td>Pode continuar, mas não o tempo todo: só metade do dia. Depois desligue o indiano e deixe só a campanha rodando.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </article>
+
+    <article class="day" id="dia-7">
+      <div class="num">Dia 7+<small>Escalar aos poucos</small></div>
+      <div class="body">
+        <h3>Aumentar cerca de 15% por dia, algo como R$ 3</h3>
+        <p>Suba o orçamento um pouco a cada dia até chegar no volume que você quer, por volta de <b>100 mensagens por dia</b>.</p>
+        <table class="stack">
+          <thead><tr><th>Situação</th><th>Quanto aumentar por dia</th></tr></thead>
+          <tbody>
+            <tr><td>Custo por lead barato</td><td>R$ 3 por dia.</td></tr>
+            <tr><td>Custo por lead mais caro</td><td>Um pouco mais, desde que traga no máximo uns 4 leads a mais por dia.</td></tr>
+          </tbody>
+        </table>
+        <p style="margin-top:16px">Exemplo com custo por lead barato:</p>
+        <div class="steps"><span>R$ 6</span><i>→</i><span>R$ 9</span><i>→</i><span>R$ 12</span><i>→</i><span>R$ 15</span><i>→</i><span>R$ 18</span><i>→ e assim por diante</i></div>
+        <p class="note">Nunca passe disso. O aquecimento é longo justamente para o número aguentar bastante.</p>
+      </div>
+    </article>
+
+  </div>
+</main>
+
+<section class="band end">
+  <div class="wrap cols">
+    <div id="regras">
+      <h2>Regras de ouro</h2>
+      <ul class="golden">
+        <li><span>No Dia 1, o número novo <b>nunca</b> inicia conversa: ele só responde.</span></li>
+        <li><span>Respeite os 2 dias de descanso, sem exceção.</span></li>
+        <li><span>No Dia 5, a Leona fica conectada sem funil e sem fluxo.</span></li>
+        <li><span>No primeiro dia de campanha, pause em 6 ou 7 leads.</span></li>
+        <li><span>Na escala, no máximo uns R$ 3 ou +4 leads por dia.</span></li>
+      </ul>
+    </div>
+    <div id="checklist">
+      <h2>Checklist</h2>
+      <ul class="check" id="list"></ul>
+      <div class="bar">
+        <div class="prog" aria-hidden="true"><i id="pbar"></i></div>
+        <span id="ptxt">0 de 9</span>
+        <button type="button" id="reset">Recomeçar</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<script>
+{
+  const items = [
+    ['Dia 1', 'Chip cadastrado; WhatsApp com foto, nicho e descrição'],
+    ['Dia 1', '3 números mandaram mensagem; o número novo respondeu e salvou os 3'],
+    ['Dia 1', 'Entrou em 3 grupos'],
+    ['Dia 2', 'Descanso'],
+    ['Dia 3', 'Descanso'],
+    ['Dia 4', 'Indiano rodou 24 horas'],
+    ['Dia 5', 'Leona conectada, indiano rodou de novo, sem funil'],
+    ['Dia 6', 'Campanha com R$ 6, pausada em 6–7 leads; indiano só meio dia'],
+    ['Dia 7+', 'Orçamento subindo ~R$ 3 por dia até ~100 mensagens/dia']
+  ];
+  const KEY = 'aquecimento-checklist';
+  let done = [];
+  try { done = JSON.parse(localStorage.getItem(KEY) || '[]'); } catch (e) { done = []; }
+  const list = document.getElementById('list');
+  const pbar = document.getElementById('pbar');
+  const ptxt = document.getElementById('ptxt');
+  const save = () => { try { localStorage.setItem(KEY, JSON.stringify(done)); } catch (e) {} };
+  const render = () => {
+    list.innerHTML = items.map((it, i) => '<li><label><input type="checkbox" id="c' + i + '" data-i="' + i + '"' + (done.includes(i) ? ' checked' : '') + '><span><b>' + it[0] + '</b> — ' + it[1] + '</span></label></li>').join('');
+    const n = done.length;
+    pbar.style.width = (n / items.length * 100) + '%';
+    ptxt.textContent = n + ' de ' + items.length;
+  };
+  list.addEventListener('change', e => {
+    const i = Number(e.target.dataset.i);
+    if (e.target.checked) { if (!done.includes(i)) done.push(i); } else { done = done.filter(x => x !== i); }
+    save(); render();
+    const el = document.getElementById('c' + i); if (el) el.focus();
+  });
+  document.getElementById('reset').addEventListener('click', () => { done = []; save(); render(); });
+  render();
+}
+</script>
+</body>
+</html>
